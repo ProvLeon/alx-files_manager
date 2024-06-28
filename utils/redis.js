@@ -16,9 +16,9 @@ class RedisClient {
       return false;
     };
     // this.client.connect();
-    // // this.connected = false;
+    //   this.connected = false;
     // this.client.on("connect", () => {
-    //   // this.connected = true;
+    //    this.connected = true;
     //   console.log("Redis connected");
     // });
   }
