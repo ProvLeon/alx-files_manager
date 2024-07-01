@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get('/status', AppController.getStatus);
 router.get('/stats', AppController.getStats);
-router.get('/users', AppController.postNew);
+router.get('/users', UserController.postNew);
 
 export default router;
