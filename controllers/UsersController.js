@@ -17,7 +17,7 @@ const UsersController = {
     const result = await dbClient.db.collection('users').insertOne({ email, password: hashedPassword });
 
     return res.status(201).json({ id: result.insertedId, email });
-  }
-}
+  },
+};
 
 export default UsersController;
