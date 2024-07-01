@@ -2,10 +2,10 @@ import express from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 
-const routes = express.Router();
+const router = express.Router();
 
-routes.get('/status', AppController.getStatus);
-routes.get('/stats', AppController.getStats);
-routes.get('/users', UsersController.postNew);
+router.get('/status', AppController.getStatus);
+router.get('/stats', AppController.getStats);
+router.post('/users', UsersController.postNew);
 
-export default routes;
+export default router;
