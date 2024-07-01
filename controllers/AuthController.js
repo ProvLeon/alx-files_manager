@@ -24,9 +24,9 @@ class AuthController {
     const key = `auth_${token}`;
 
     //set the key token and expiration time
-    await RedisClient.set(key, user._id.toString(), 86400);
+    await redisClient.set(key, user._id.toString(), 86400);
 
-    return res.status(200).send(token);
+    return res.status(200).json({ token });
   }
 
   static async getDisconnect(req, res) {
