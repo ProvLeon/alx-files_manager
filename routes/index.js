@@ -3,7 +3,7 @@ import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
 
-const router = express.Router();
+const routes = express.Router();
 
 routes.get('/status', AppController.getStatus);
 routes.get('/stats', AppController.getStats);
@@ -12,4 +12,4 @@ routes.get('/connect', AuthController.getConnect);
 routes.get('/disconnect', AuthController.getDisconnect);
 routes.get('/user/me', UsersController.getMe);
 
-export default router;
+export default routes;

@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
+import sha1 from 'sha1';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
-import sha1 from 'sha1';
-import { v4 as uuidv4 } from 'uuid';
 
 class AuthController {
   static async getConnect(req, res) {
@@ -14,7 +14,7 @@ class AuthController {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const user = await dbClient.db.collection('users').findOne({ email, password:sha1(password) });
+    const user = await dbClient.db.collection('users').findOne({ email, password: sha1(password) });
 
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -23,7 +23,7 @@ class AuthController {
     const token = uuidv4();
     const key = `auth_${token}`;
 
-    //set the key token and expiration time
+    // set the key token and expiration time
     await redisClient.set(key, user._id.toString(), 86400);
 
     return res.status(200).json({ token });
