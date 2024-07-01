@@ -1,7 +1,7 @@
 import sha1 from 'sha1';
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
-import { ObjectId } from 'mongodb';
 
 const postNew = async (req, res) => {
   const { email, password } = req.body;
@@ -18,7 +18,7 @@ const postNew = async (req, res) => {
   const result = await dbClient.db.collection('users').insertOne({ email, password: hashedPassword });
 
   return res.status(201).json({ id: result.insertedId, email });
-}
+};
 
 const getMe = async (req, res) => {
   const token = req.headers['x-token'];
@@ -32,11 +32,11 @@ const getMe = async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const user = dbClient.db.collection('users').findOne({ _id: new ObjectId(userId)});
+  const user = dbClient.db.collection('users').findOne({ _id: new ObjectId(userId) });
   if (!user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   return res.status(200).json({ id: user._id, email: user.email });
-}
+};
 
 module.exports = { postNew, getMe };
