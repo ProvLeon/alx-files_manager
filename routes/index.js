@@ -10,6 +10,6 @@ routes.get('/stats', AppController.getStats);
 routes.post('/users', UsersController.postNew);
 routes.get('/connect', AuthController.getConnect);
 routes.get('/disconnect', AuthController.getDisconnect);
-routes.get('/user/me', UsersController.getMe);
+routes.get('/users/me', UsersController.getMe);
 
 export default routes;
