@@ -3,9 +3,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
+import { ObjectId } from 'mongodb'
 
 const FilesController = {
-  async postUpload(req, res) {
+  postUpload: async (req, res) {
     const token = req.headers['X-Token'];
     const {
       name, type, parentId = 0, isPublic = false, data,
@@ -66,6 +67,61 @@ const FilesController = {
 
     return res.status(201).json({ id: result.insertedId, ...fileDocument });
   },
+
+  getShow = async (req, res) {
+    const token = req.headers['X-Token']
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const key =  `auth_${token}`;
+    const userId = await redisClient.get(key);
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const docId = req.params.id;
+    if (!ObjectId.isValid(docId)) {
+      return req.status(404).json({ error: 'Not found' });
+    }
+
+    const file = await dbClient.collection('files').findOne({ ._id: new ObjectId(docId) });
+    if (!file) {
+      return req.status(404).json({ error:  'Not found' });
+    }
+
+    return res.status(200).json(file);
+  },
+
+  getIndex = async (req, res) {
+    const token = req.headers['X-Token'];
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const userId = await redisClient.get(`auth_${token}`);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const parentId = req.query.parentId || '0';
+    const page = parseInt(req.query.page, 10) || 0;
+    const pageSize = 20;
+
+    const query = {
+      userId: new ObjectId(userId),
+      parentId: parentId === 0 ? 0 : new ObjectId(parentId)
+    }
+
+    const file = await dbClient.collection('files')
+      .find(query)
+      .skip(page * pageSize)
+      .limit(pageSize)
+      .toArray();
+    
+    return res.status(200).json(file);
+  }
 };
 
 export default FilesController;
