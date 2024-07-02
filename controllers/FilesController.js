@@ -6,7 +6,7 @@ import dbClient from '../utils/db';
 import { ObjectId } from 'mongodb'
 
 const FilesController = {
-  postUpload: async (req, res) {
+  postUpload: async (req, res) => {
     const token = req.headers['X-Token'];
     const {
       name, type, parentId = 0, isPublic = false, data,
@@ -68,13 +68,13 @@ const FilesController = {
     return res.status(201).json({ id: result.insertedId, ...fileDocument });
   },
 
-  getShow = async (req, res) {
+  getShow = async (req, res) => {
     const token = req.headers['X-Token']
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
 
-    const key =  `auth_${token}`;
+    const key = `auth_${token}`;
     const userId = await redisClient.get(key);
 
     if (!userId) {
@@ -88,7 +88,7 @@ const FilesController = {
 
     const file = await dbClient.collection('files').findOne({ ._id: new ObjectId(docId) });
     if (!file) {
-      return req.status(404).json({ error:  'Not found' });
+      return req.status(404).json({ error: 'Not found' });
     }
 
     return res.status(200).json(file);
@@ -119,7 +119,7 @@ const FilesController = {
       .skip(page * pageSize)
       .limit(pageSize)
       .toArray();
-    
+
     return res.status(200).json(file);
   }
 };
