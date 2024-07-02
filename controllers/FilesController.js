@@ -29,7 +29,7 @@ const FilesController = {
       return res.status(400).json({ error: 'Missing data' });
     }
 
-    const parent = parentId !== 0 ? await dbClient
+    const parent = parentId !== 0 ? await dbClient.db
       .collection('files')
       .findOne({ _id: parentId }) : null;
 
@@ -50,7 +50,7 @@ const FilesController = {
     };
 
     if (type !== 'folder') {
-      const result = await dbClient.collection('files').insertOne(fileDocument);
+      const result = await dbClient.db.collection('files').insertOne(fileDocument);
 
       return res.status(201).json({ id: result.insertedId, ...fileDocument });
     }
@@ -115,7 +115,7 @@ const FilesController = {
       parentId: parentId === 0 ? 0 : new ObjectId(parentId),
     };
 
-    const file = await dbClient.collection('files')
+    const file = await dbClient.db.collection('files')
       .find(query)
       .skip(page * pageSize)
       .limit(pageSize)
