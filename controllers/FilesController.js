@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
 import path from 'path';
+import { ObjectId } from 'mongodb';
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
-import { ObjectId } from 'mongodb'
 
 const FilesController = {
   postUpload: async (req, res) => {
@@ -68,10 +68,10 @@ const FilesController = {
     return res.status(201).json({ id: result.insertedId, ...fileDocument });
   },
 
-  getShow = async (req, res) => {
-    const token = req.headers['X-Token']
+  getShow: async (req, res) => {
+    const token = req.headers['X-Token'];
     if (!token) {
-      return res.status(401).json({ error: 'Unauthorized' })
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     const key = `auth_${token}`;
@@ -86,7 +86,7 @@ const FilesController = {
       return req.status(404).json({ error: 'Not found' });
     }
 
-    const file = await dbClient.collection('files').findOne({ ._id: new ObjectId(docId) });
+    const file = await dbClient.db.collection('files').findOne({ _id: new ObjectId(docId) });
     if (!file) {
       return req.status(404).json({ error: 'Not found' });
     }
@@ -94,7 +94,7 @@ const FilesController = {
     return res.status(200).json(file);
   },
 
-  getIndex = async (req, res) {
+  getIndex: async (req, res) => {
     const token = req.headers['X-Token'];
     if (!token) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -111,8 +111,8 @@ const FilesController = {
 
     const query = {
       userId: new ObjectId(userId),
-      parentId: parentId === 0 ? 0 : new ObjectId(parentId)
-    }
+      parentId: parentId === 0 ? 0 : new ObjectId(parentId),
+    };
 
     const file = await dbClient.collection('files')
       .find(query)
@@ -121,7 +121,7 @@ const FilesController = {
       .toArray();
 
     return res.status(200).json(file);
-  }
+  },
 };
 
 export default FilesController;
