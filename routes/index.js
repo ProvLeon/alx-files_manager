@@ -7,7 +7,7 @@ const routes = express.Router();
 
 routes.get('/status', AppController.getStatus);
 routes.get('/stats', AppController.getStats);
-routes.get('/users', UsersController.postNew);
+routes.post('/users', UsersController.postNew);
 routes.get('/connect', AuthController.getConnect);
 routes.get('/disconnect', AuthController.getDisconnect);
 routes.get('/user/me', UsersController.getMe);
