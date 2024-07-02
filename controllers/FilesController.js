@@ -30,7 +30,7 @@ const FilesController = {
     }
 
     const parent = parentId !== 0 ? await dbClient
-      .db.collection('files')
+      .collection('files')
       .findOne({ _id: parentId }) : null;
 
     if (parentId !== 0 && !parent) {
@@ -50,7 +50,8 @@ const FilesController = {
     };
 
     if (type !== 'folder') {
-      const result = await dbClient.db.collection('files').insertOne(fileDocument);
+      const result = await dbClient.collection('files').insertOne(fileDocument);
+
       return res.status(201).json({ id: result.insertedId, ...fileDocument });
     }
 
@@ -63,7 +64,7 @@ const FilesController = {
     fileDocument.localPath = localPath;
 
     const result = await dbClient
-      .db.collection('files').insertOne(fileDocument);
+      .collection('files').insertOne(fileDocument);
 
     return res.status(201).json({ id: result.insertedId, ...fileDocument });
   },
@@ -86,7 +87,7 @@ const FilesController = {
       return req.status(404).json({ error: 'Not found' });
     }
 
-    const file = await dbClient.db.collection('files').findOne({ _id: new ObjectId(docId) });
+    const file = await dbClient.collection('files').findOne({ _id: new ObjectId(docId) });
     if (!file) {
       return req.status(404).json({ error: 'Not found' });
     }
